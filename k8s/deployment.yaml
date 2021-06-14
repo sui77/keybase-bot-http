@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keybasebot
+  namespace: suat
+spec:
+  selector:
+    matchLabels:
+      run: keybasebot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: keybasebot
+    spec:
+      containers:
+      - name: keybasebot
+        image: docker.k8s.sui.li/keybasebot:2
+
+
+        env:
+        - name: KBB_PORT
+          value: "8080"
+        - name: KBB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: keybasebot-env
+              key: KBB_USERNAME
+        - name: KBB_PAPER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: keybasebot-env
+              key: KBB_PAPER_KEY
+        - name: KBB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: keybasebot-env
+              key: KBB_API_KEY
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keybasebot
+  namespace: suat
+  labels:
+    run: keybasebot
+spec:
+  selector:
+    run: keybasebot
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+
+

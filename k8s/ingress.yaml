@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: keybasebot-ingress
+  namespace: suat
+  annotations:
+    haproxy.org/check: "true"
+    haproxy.org/forwarded-for: "true"
+    haproxy.org/ssl-redirect: "true"
+    haproxy.org/load-balance: "roundrobin"
+spec:
+  tls:
+  - hosts:
+    - keybase.k8s.sui.li
+    secretName: devops/tls-sui-li
+  rules:
+  - host: keybase.k8s.sui.li
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: keybasebot
+          servicePort: 8080
