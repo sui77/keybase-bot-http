@@ -1,7 +1,7 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: keybasebot-ingress
+  name: keybasebot-ingress 
   namespace: suat
   annotations:
     haproxy.org/check: "true"
@@ -12,12 +12,15 @@ spec:
   tls:
   - hosts:
     - keybase.k8s.sui.li
-    secretName: devops/tls-sui-li
+    secretName: tls-sui-li
   rules:
   - host: keybase.k8s.sui.li
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: keybasebot
-          servicePort: 8080
+          service:
+            name: keybasebot
+            port:
+              number: 8080
