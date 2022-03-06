@@ -24,6 +24,7 @@ const WebServer = class {
     init() {
         const router = new Router();
         router.get( '/sendmessage', require('./WebServer/sendmessage.js')((msg) => this.triggerOnChatMessage(msg) ));
+        router.post( '/grafana', require('./WebServer/grafana.js')((msg) => this.triggerOnChatMessage(msg) ));
         const app = new Koa();
         app
             .use(koaBody())
